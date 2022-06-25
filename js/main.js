@@ -8,7 +8,7 @@ window.onload = function() {
 
   loadImages();
 
-  p1.init(playerPic, "Blue Car");
+  p1.init(playerPic, "Warrior");
 
   inputInit();
 }

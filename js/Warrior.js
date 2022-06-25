@@ -36,6 +36,7 @@ function warriorClass() {
     }
     this.x = this.homeX;
     this.y = this.homeY;
+    this.keysHeld = 0;
   }
   
   this.move = function() {
@@ -55,14 +56,39 @@ function warriorClass() {
       nextX += playerMoveSpeed;
     }
     
-    var walkIntoTileType = getTileAtPixelCoord(nextX, nextY);
+    var walkIntoTileTypeIndex = getTileIndexAtPixelCoord(nextX, nextY);
+    var walkIntoTileType = wall;
+
+    if(walkIntoTileTypeIndex != undefined) {
+      walkIntoTileType = roomGrid[walkIntoTileTypeIndex];
+    }
     
-    if (walkIntoTileType === floor) {
-      this.x = nextX;
-      this.y = nextY;
-    } else if(walkIntoTileType === treasure) {
-      document.getElementById("debugText").innerHTML = this.myName + " won the race!";
-      this.reset();
+    switch(walkIntoTileType) {
+      case floor:
+        this.x = nextX;
+        this.y = nextY;
+        break;
+      case treasure:
+        document.getElementById("debugText").innerHTML = this.myName + " won!";
+        this.reset();
+        break;
+      case door:
+        if(this.keysHeld > 0) {
+          this.keysHeld--;
+          document.getElementById("debugText").innerHTML = "key: " + this.keysHeld;
+          
+          roomGrid[walkIntoTileTypeIndex] = floor;
+        }
+        break;
+      case key:
+        this.keysHeld ++;
+        document.getElementById("debugText").innerHTML = "key: " + this.keysHeld;
+
+        roomGrid[walkIntoTileTypeIndex] = floor;
+        break;
+      case wall:
+      default:
+        break;
     }
   }
   

@@ -3,6 +3,7 @@ var floorPic=document.createElement("img");
 var wallPic=document.createElement("img");
 var treasurePic=document.createElement("img");
 var keyPic=document.createElement("img");
+var doorPic=document.createElement("img");
 var tilePics = [];
 var picsToLoad = 0;
 
@@ -25,8 +26,9 @@ function loadImages() {
     {varName:playerPic, file:"warrior-remove74X50.png"},
     {varName:floorPic, file:"asphalt2_50x50.jpg"},
     {varName:wallPic, file:"brick-50x50.png"},
-    {varName:keyPic, file:"key50x50.jpg"},
-    {varName:treasurePic, file:"treasure50x50.jpg"}
+    {varName:keyPic, file:"key-transparent60x30.png"},
+    {varName:treasurePic, file:"treasure-transparent50x41.png"},
+    {varName:doorPic, file:"door_closed-transparent50x50.png"}
   ]
   
   for(var i=0; i<imageList.length; i++) {

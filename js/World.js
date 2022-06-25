@@ -7,31 +7,41 @@ const wall = 1;
 const player = 2;
 const treasure = 3;
 const key = 4;
+const door = 5;
 
 var	roomGrid	=
-						  [	4,	4,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,
-								4,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,
-								1,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,
-								1,	0,	0,	0,	0,	1,	1,	1,	1,	1,	1,	1,	1,	1,	0,	1,
-								1,	0,	0,	0,	1,	1,	1,	1,	4,	4,	4,	1,	1,	1,	0,	1,
-								1,	0,	0,	1,	1,	0,	0,	1,	1,	4,	1,	1,	0,	0,	0,	1,
-								1,	0,	0,	1,	0,	0,	0,	0,	1,	1,	1,	0,	0,	0,	0,	1,
-								1,	0,	0,	1,	0,	0,	0,	0,	0,	1,	1,	0,	0,	0,	0,	1,
-								1,	0,	0,	1,	0,	0,	0,	0,	0,	0,	1,	0,	0,	1,	0,	1,
-								1,	0,	0,	1,	0,	0,	1,	0,	0,	0,	1,	0,	0,	1,	0,	1,
-								1,	0,	2,	1,	0,	0,	1,	1,	0,	0,	0,	0,	0,	1,	0,	1,
-								1,	1,	1,	1,	3,	3,	1,	1,	1,	4,	4,	4,	4,	1,	1,	1 ];    var tileCounter = roomCols * (roomRows - 3);
+[	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,
+  1,	0,	0,	0,	0,	0,	1,	0,	0,	0,	5,	0,	1,	1,	1,	1,
+  1,	0,	4,	0,	4,	0,	1,	0,	2,	0,	1,	0,	1,	4,	4,	1,
+  1,	0,	0,	0,	0,	0,	1,	0,	0,	0,	1,	5,	1,	5,	1,	1,
+  1,	1,	1,	5,	1,	1,	1,	0,	4,	0,	1,	0,	0,	0,	1,	1,
+  1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	4,	0,	1,	1,
+  1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	0,	0,	1,	1,
+  1,	0,	1,	1,	1,	1,	1,	1,	0,	1,	1,	0,	4,	0,	1,	1,
+  1,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	0,	1,	1,
+  1,	0,	5,	0,	5,	0,	5,	0,	3,	0,	1,	1,	1,	1,	1,	1,
+  1,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	1,	1,	1,	1,	1,
+  1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1];
+  
+var tileCounter = roomCols * (roomRows - 3);
 
-function getTileAtPixelCoord(pixelX,pixelY) {
+function tileTypeHasTransparency(checkTileType)	{
+  return	(checkTileType	==	treasure	||
+          checkTileType	==	key	||
+          checkTileType	==	door);
+}
+
+function getTileIndexAtPixelCoord(pixelX,pixelY) {
   var row = Math.floor(pixelY/tileHeight);
   var column = Math.floor(pixelX/tileWidth);
 
   if(column >= roomCols || column < 0 || row < 0 || row >= roomRows) {
-    return wall;
+    document.getElementById("debugText").innerHTML	= "out	of	bounds:"+pixelX+","+pixelY;
+    return undefined;
   } 
-    var tileIndex = roomTileToIndex(column, row);
+  var tileIndex = roomTileToIndex(column, row);
 
-    return roomGrid[tileIndex];
+  return tileIndex;
 }
 
 function isWallAtTileCoord(roomTileCol, roomTileRow) {
@@ -68,6 +78,13 @@ function drawTiles() {
         case key:
           useImg = keyPic;
           break;
+        case door:
+          useImg = doorPic;
+          break;
+      }
+
+      if(tileTypeHasTransparency(tileTypeHere)) {
+        canvasContext.drawImage(floorPic, tileLeftEdgeX, tileTopEdgeY);
       }
 
       canvasContext.drawImage(useImg, tileLeftEdgeX, tileTopEdgeY);
